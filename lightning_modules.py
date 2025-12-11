@@ -12,7 +12,12 @@ import pytorch_lightning as pl
 import wandb
 from torch_scatter import scatter_add, scatter_mean
 from Bio.PDB import PDBParser
-from Bio.PDB.Polypeptide import three_to_one
+try:
+    from Bio.PDB.Polypeptide import three_to_one
+except ImportError:
+    from Bio.PDB.Polypeptide import protein_letters_3to1
+    def three_to_one(s):
+        return protein_letters_3to1.get(s.upper(), 'X')
 
 from constants import dataset_params, FLOAT_TYPE, INT_TYPE
 from equivariant_diffusion.dynamics import EGNNDynamics
